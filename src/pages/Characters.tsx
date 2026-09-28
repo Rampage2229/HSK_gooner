@@ -8,11 +8,32 @@ import { Search } from 'lucide-react';
 export function Characters() {
   const { state } = useAppState();
   const [search, setSearch] = useState('');
-  const [selectedChar, setSelectedChar] = useState(characters[0]);
+  const [selectedChar, setSelectedChar] = useState(characters[0] || null);
 
   const filtered = characters.filter(c =>
     c.character.includes(search) || c.pinyin.includes(search.toLowerCase()) || c.meaning.toLowerCase().includes(search.toLowerCase())
   );
+
+  if (!selectedChar && filtered.length > 0) {
+    setSelectedChar(filtered[0]);
+  }
+
+  if (!selectedChar) {
+    return (
+      <div className="animate-fade-in space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>Characters 汉字</h1>
+          <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
+            Learn characters through stroke order, components, and radicals
+          </p>
+        </div>
+        <div className="card text-center py-12">
+          <p className="text-4xl mb-4">📝</p>
+          <p style={{ color: 'var(--text-secondary)' }}>No characters available yet.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="animate-fade-in space-y-6">

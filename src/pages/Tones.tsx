@@ -114,7 +114,7 @@ export function Tones() {
   const [quizMode, setQuizMode] = useState<'see' | 'listen'>('see');
   const { play, isPlaying } = useAudio();
 
-  const currentQuestion = quizQuestions[quizIndex % quizQuestions.length];
+  const currentQuestion = quizQuestions[quizIndex % quizQuestions.length] || quizQuestions[0];
 
   const handleQuizAnswer = (tone: number) => {
     setQuizAnswer(tone);

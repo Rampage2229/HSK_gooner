@@ -2,9 +2,9 @@ import { ReactNode } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useAppState } from '../hooks/useStore';
 import {
-  LayoutDashboard, BookOpen, GraduationCap, Volume2, Music,
-  PenTool, BookMarked, Headphones, Mic, RotateCcw, BarChart3,
-  Globe, Settings, Award, Map, Menu, X, Sun, Moon
+  LayoutDashboard, BookOpen, Music,
+  PenTool, BookMarked,
+  Globe, Settings, Menu, X, Sun, Moon
 } from 'lucide-react';
 
 
@@ -13,20 +13,11 @@ interface LayoutProps {
 }
 
 const navItems = [
-  { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
-  { path: '/curriculum', icon: BookOpen, label: 'Curriculum' },
-  { path: '/roadmap', icon: Map, label: 'Roadmap' },
-  { path: '/pinyin', icon: Volume2, label: 'Pinyin' },
+  { path: '/', icon: LayoutDashboard, label: 'Home' },
+  { path: '/curriculum', icon: BookOpen, label: 'Learn' },
   { path: '/tones', icon: Music, label: 'Tones' },
   { path: '/characters', icon: PenTool, label: 'Characters' },
   { path: '/vocabulary', icon: BookMarked, label: 'Vocabulary' },
-  { path: '/grammar', icon: GraduationCap, label: 'Grammar' },
-  { path: '/reading', icon: BookOpen, label: 'Reading' },
-  { path: '/listening', icon: Headphones, label: 'Listening' },
-  { path: '/speaking', icon: Mic, label: 'Speaking' },
-  { path: '/review', icon: RotateCcw, label: 'SRS Review' },
-  { path: '/hsk', icon: Award, label: 'HSK' },
-  { path: '/analytics', icon: BarChart3, label: 'Analytics' },
   { path: '/resources', icon: Globe, label: 'Resources' },
   { path: '/settings', icon: Settings, label: 'Settings' },
 ];
@@ -124,9 +115,9 @@ export function Layout({ children }: LayoutProps) {
         {[
           { path: '/', icon: LayoutDashboard, label: 'Home' },
           { path: '/curriculum', icon: BookOpen, label: 'Learn' },
-          { path: '/review', icon: RotateCcw, label: 'Review' },
           { path: '/tones', icon: Music, label: 'Tones' },
           { path: '/characters', icon: PenTool, label: 'Chars' },
+          { path: '/resources', icon: Globe, label: 'Tools' },
         ].map(item => (
           <NavLink
             key={item.path}

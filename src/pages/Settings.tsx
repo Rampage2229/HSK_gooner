@@ -1,5 +1,5 @@
 import { useAppState } from '../hooks/useStore';
-import { Sun, Moon, RotateCcw } from 'lucide-react';
+import { Sun, Moon, RotateCcw, Download, Upload } from 'lucide-react';
 
 export function Settings() {
   const { state, dispatch } = useAppState();
@@ -11,11 +11,41 @@ export function Settings() {
     }
   };
 
+  const handleExport = () => {
+    const data = localStorage.getItem('mandarin-app-state');
+    if (data) {
+      const blob = new Blob([data], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `mandarin-progress-${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+  };
+
+  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const data = event.target?.result as string;
+          localStorage.setItem('mandarin-app-state', data);
+          window.location.reload();
+        } catch {
+          alert('Invalid backup file');
+        }
+      };
+      reader.readAsText(file);
+    }
+  };
+
   return (
     <div className="animate-fade-in max-w-2xl mx-auto space-y-6">
       <div>
         <h1 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>Settings</h1>
-        <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>Customize your learning experience</p>
+        <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>Customize your experience</p>
       </div>
 
       {/* Theme */}
@@ -75,10 +105,6 @@ export function Settings() {
               <p style={{ color: 'var(--text-primary)' }}>{state.profile.dailyTime}</p>
             </div>
             <div>
-              <p className="font-medium" style={{ color: 'var(--text-secondary)' }}>Speaking Priority</p>
-              <p style={{ color: 'var(--text-primary)' }}>{state.profile.speakingPriority}</p>
-            </div>
-            <div>
               <p className="font-medium" style={{ color: 'var(--text-secondary)' }}>Start Date</p>
               <p style={{ color: 'var(--text-primary)' }}>{new Date(state.profile.startDate).toLocaleDateString()}</p>
             </div>
@@ -86,87 +112,30 @@ export function Settings() {
         </div>
       )}
 
-      {/* Study Plan */}
+      {/* Data Management */}
       <div className="card">
-        <h2 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>Daily Study Plan</h2>
-        <p className="text-sm mb-3" style={{ color: 'var(--text-secondary)' }}>Based on your available time:</p>
-        <div className="space-y-2">
-          {[
-            { activity: 'SRS Review', time: '20 min', icon: '🔄' },
-            { activity: 'Grammar Study', time: '25 min', icon: '📐' },
-            { activity: 'Listening', time: '30 min', icon: '🎧' },
-            { activity: 'Reading', time: '20 min', icon: '📚' },
-            { activity: 'Speaking', time: '20 min', icon: '🗣' },
-          ].map(item => (
-            <div key={item.activity} className="flex items-center gap-3 p-2 rounded-lg" style={{ backgroundColor: 'var(--bg-secondary)' }}>
-              <span>{item.icon}</span>
-              <span className="flex-1 text-sm" style={{ color: 'var(--text-primary)' }}>{item.activity}</span>
-              <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>{item.time}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Data Export/Import */}
-      <div className="card">
-        <h2 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>Data Backup</h2>
-        <p className="text-sm mb-3" style={{ color: 'var(--text-secondary)' }}>
-          Export your progress to a file, or import a previous backup.
+        <h2 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>Data Management</h2>
+        <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
+          Your progress is stored locally in your browser. Export regularly to avoid losing data.
         </p>
         <div className="flex gap-3 flex-wrap">
           <button
-            onClick={() => {
-              const data = localStorage.getItem('mandarin-app-state');
-              if (data) {
-                const blob = new Blob([data], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `mandarin-progress-${new Date().toISOString().split('T')[0]}.json`;
-                a.click();
-                URL.revokeObjectURL(url);
-              }
-            }}
+            onClick={handleExport}
             className="flex items-center gap-2 px-4 py-2 rounded-lg border border-green-300 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 transition text-sm"
           >
-            📥 Export Progress
+            <Download size={16} /> Export Progress
           </button>
           <label className="flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-300 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition text-sm cursor-pointer">
-            📤 Import Progress
-            <input
-              type="file"
-              accept=".json"
-              className="hidden"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) {
-                  const reader = new FileReader();
-                  reader.onload = (event) => {
-                    try {
-                      const data = JSON.parse(event.target?.result as string);
-                      localStorage.setItem('mandarin-app-state', JSON.stringify(data));
-                      window.location.reload();
-                    } catch {
-                      alert('Invalid backup file');
-                    }
-                  };
-                  reader.readAsText(file);
-                }
-              }}
-            />
+            <Upload size={16} /> Import Progress
+            <input type="file" accept=".json" onChange={handleImport} className="hidden" />
           </label>
+          <button
+            onClick={handleReset}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-red-300 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition text-sm"
+          >
+            <RotateCcw size={16} /> Reset All Data
+          </button>
         </div>
-      </div>
-
-      {/* Data */}
-      <div className="card">
-        <h2 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>Reset</h2>
-        <p className="text-sm mb-3" style={{ color: 'var(--text-secondary)' }}>
-          Warning: This will permanently delete all your progress.
-        </p>
-        <button onClick={handleReset} className="flex items-center gap-2 px-4 py-2 rounded-lg border border-red-300 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition text-sm">
-          <RotateCcw size={14} /> Reset All Progress
-        </button>
       </div>
     </div>
   );

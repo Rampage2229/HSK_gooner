@@ -7,6 +7,7 @@ import {
   Globe, Settings, Award, Map, Menu, X, Sun, Moon
 } from 'lucide-react';
 
+
 interface LayoutProps {
   children: ReactNode;
 }
@@ -112,11 +113,34 @@ export function Layout({ children }: LayoutProps) {
       )}
 
       {/* Main Content */}
-      <main className="flex-1 overflow-y-auto pt-14 lg:pt-0">
+      <main className="flex-1 overflow-y-auto pt-14 pb-16 lg:pt-0 lg:pb-0">
         <div className="max-w-7xl mx-auto p-4 lg:p-6">
           {children}
         </div>
       </main>
+
+      {/* Mobile Bottom Navigation */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 flex items-center justify-around border-t py-2 px-1 z-40" style={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--border-color)' }}>
+        {[
+          { path: '/', icon: LayoutDashboard, label: 'Home' },
+          { path: '/curriculum', icon: BookOpen, label: 'Learn' },
+          { path: '/review', icon: RotateCcw, label: 'Review' },
+          { path: '/tones', icon: Music, label: 'Tones' },
+          { path: '/characters', icon: PenTool, label: 'Chars' },
+        ].map(item => (
+          <NavLink
+            key={item.path}
+            to={item.path}
+            className={`flex flex-col items-center gap-0.5 px-3 py-1 rounded-lg transition ${
+              location.pathname === item.path ? 'text-primary-500' : ''
+            }`}
+            style={location.pathname !== item.path ? { color: 'var(--text-secondary)' } : undefined}
+          >
+            <item.icon size={20} />
+            <span className="text-[10px] font-medium">{item.label}</span>
+          </NavLink>
+        ))}
+      </nav>
     </div>
   );
 }

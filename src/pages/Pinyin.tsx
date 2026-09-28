@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { AudioButton } from '../components/AudioButton';
 
 const initials = [
   { group: 'Labials', items: [{ py: 'b', ipa: '/p/', desc: 'Like English "b" but unaspirated', example: '八 bā' }, { py: 'p', ipa: '/pʰ/', desc: 'Like English "p" with strong puff of air', example: '怕 pà' }, { py: 'm', ipa: '/m/', desc: 'Like English "m"', example: '妈 mā' }, { py: 'f', ipa: '/f/', desc: 'Like English "f"', example: '发 fā' }] },
@@ -49,18 +50,21 @@ export function Pinyin() {
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {group.items.map(item => (
-                <button
+                <div
                   key={item.py}
+                  className={`card text-left transition cursor-pointer ${selectedItem === item.py ? 'border-primary-400 ring-2 ring-primary-200 dark:ring-primary-800' : ''}`}
                   onClick={() => setSelectedItem(selectedItem === item.py ? null : item.py)}
-                  className={`card text-left transition ${selectedItem === item.py ? 'border-primary-400 ring-2 ring-primary-200 dark:ring-primary-800' : ''}`}
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-2xl font-bold text-primary-600 font-mono">{item.py}</span>
                     {'ipa' in item && <span className="text-xs text-gray-400 font-mono">{(item as typeof initials[number]['items'][number]).ipa}</span>}
+                    <div className="ml-auto" onClick={e => e.stopPropagation()}>
+                      <AudioButton text={item.example.split(' ')[0]} size="sm" />
+                    </div>
                   </div>
                   <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>{item.desc}</p>
                   <p className="text-sm mt-2 chinese-char" style={{ color: 'var(--text-primary)' }}>{item.example}</p>
-                </button>
+                </div>
               ))}
             </div>
           </div>

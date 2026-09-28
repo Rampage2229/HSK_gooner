@@ -107,11 +107,62 @@ export function Settings() {
         </div>
       </div>
 
+      {/* Data Export/Import */}
+      <div className="card">
+        <h2 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>Data Backup</h2>
+        <p className="text-sm mb-3" style={{ color: 'var(--text-secondary)' }}>
+          Export your progress to a file, or import a previous backup.
+        </p>
+        <div className="flex gap-3 flex-wrap">
+          <button
+            onClick={() => {
+              const data = localStorage.getItem('mandarin-app-state');
+              if (data) {
+                const blob = new Blob([data], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `mandarin-progress-${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+              }
+            }}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-green-300 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 transition text-sm"
+          >
+            📥 Export Progress
+          </button>
+          <label className="flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-300 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition text-sm cursor-pointer">
+            📤 Import Progress
+            <input
+              type="file"
+              accept=".json"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  const reader = new FileReader();
+                  reader.onload = (event) => {
+                    try {
+                      const data = JSON.parse(event.target?.result as string);
+                      localStorage.setItem('mandarin-app-state', JSON.stringify(data));
+                      window.location.reload();
+                    } catch {
+                      alert('Invalid backup file');
+                    }
+                  };
+                  reader.readAsText(file);
+                }
+              }}
+            />
+          </label>
+        </div>
+      </div>
+
       {/* Data */}
       <div className="card">
-        <h2 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>Data</h2>
+        <h2 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>Reset</h2>
         <p className="text-sm mb-3" style={{ color: 'var(--text-secondary)' }}>
-          All data is stored locally in your browser. No account needed.
+          Warning: This will permanently delete all your progress.
         </p>
         <button onClick={handleReset} className="flex items-center gap-2 px-4 py-2 rounded-lg border border-red-300 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition text-sm">
           <RotateCcw size={14} /> Reset All Progress

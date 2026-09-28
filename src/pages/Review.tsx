@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAppState } from '../hooks/useStore';
 import { allVocabulary } from '../data/vocabulary';
+import { AudioButton } from '../components/AudioButton';
 
 export function Review() {
   const { state, dispatch } = useAppState();
@@ -98,7 +99,12 @@ export function Review() {
             <p className="text-5xl chinese-char font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
               {currentItem.word.simplified}
             </p>
-            <p className="text-lg text-primary-600">{currentItem.word.pinyin}</p>
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <p className="text-lg text-primary-600">{currentItem.word.pinyin}</p>
+              <div onClick={e => e.stopPropagation()}>
+                <AudioButton text={currentItem.word.simplified} size="md" />
+              </div>
+            </div>
             <p className="text-sm mt-4" style={{ color: 'var(--text-secondary)' }}>Tap to reveal meaning</p>
           </div>
         ) : (
@@ -109,7 +115,12 @@ export function Review() {
             <p className="text-lg text-primary-600 mb-2">{currentItem.word.pinyin}</p>
             <p className="text-xl mb-4" style={{ color: 'var(--text-primary)' }}>{currentItem.word.meaning}</p>
             <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-800 max-w-sm">
-              <p className="chinese-char text-sm" style={{ color: 'var(--text-primary)' }}>{currentItem.word.exampleSentence}</p>
+              <div className="flex items-start gap-2">
+                <p className="chinese-char text-sm flex-1" style={{ color: 'var(--text-primary)' }}>{currentItem.word.exampleSentence}</p>
+                <div onClick={e => e.stopPropagation()}>
+                  <AudioButton text={currentItem.word.exampleSentence} size="sm" />
+                </div>
+              </div>
               <p className="text-xs text-primary-600 mt-1">{currentItem.word.examplePinyin}</p>
               <p className="text-xs italic mt-1" style={{ color: 'var(--text-secondary)' }}>{currentItem.word.exampleTranslation}</p>
             </div>

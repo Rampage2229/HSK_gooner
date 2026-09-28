@@ -66,4 +66,17 @@ export const hsk2Vocabulary: VocabularyWord[] = [
   { id: 'hsk2-010', simplified: '认识', traditional: '認識', pinyin: 'rènshi', meaning: 'to know (a person) / to recognize', partOfSpeech: 'verb', hskLevel: 2, exampleSentence: '你认识他吗？', examplePinyin: 'Nǐ rènshi tā ma?', exampleTranslation: 'Do you know him?', tags: ['verb', 'basic'] },
 ];
 
-export const allVocabulary: VocabularyWord[] = [...hsk1Vocabulary, ...hsk2Vocabulary];
+export const hsk3Vocabulary: VocabularyWord[] = [
+  { id: 'hsk3-001', simplified: '决定', traditional: '決定', pinyin: 'juédìng', meaning: 'to decide / decision', partOfSpeech: 'verb', hskLevel: 3, exampleSentence: '我已经决定了。', examplePinyin: 'Wǒ yǐjīng juédìng le.', exampleTranslation: 'I have already decided.', tags: ['verb', 'decision'] },
+  { id: 'hsk3-002', simplified: '环境', traditional: '環境', pinyin: 'huánjìng', meaning: 'environment / surroundings', partOfSpeech: 'noun', hskLevel: 3, exampleSentence: '这里的环境很好。', examplePinyin: 'Zhèlǐ de huánjìng hěn hǎo.', exampleTranslation: 'The environment here is very good.', tags: ['noun', 'environment'] },
+  { id: 'hsk3-003', simplified: '经验', traditional: '經驗', pinyin: 'jīngyàn', meaning: 'experience', partOfSpeech: 'noun', hskLevel: 3, exampleSentence: '他有很多工作经验。', examplePinyin: 'Tā yǒu hěn duō gōngzuò jīngyàn.', exampleTranslation: 'He has a lot of work experience.', tags: ['noun', 'work'] },
+  { id: 'hsk3-004', simplified: '竞争', traditional: '競爭', pinyin: 'jìngzhēng', meaning: 'to compete / competition', partOfSpeech: 'verb', hskLevel: 3, exampleSentence: '竞争很激烈。', examplePinyin: 'Jìngzhēng hěn jīliè.', exampleTranslation: 'The competition is very fierce.', tags: ['verb', 'business'] },
+  { id: 'hsk3-005', simplified: '骄傲', traditional: '驕傲', pinyin: `jiāo'ào`, meaning: 'proud / arrogant', partOfSpeech: 'adjective', hskLevel: 3, exampleSentence: '我为你感到骄傲。', examplePinyin: 'Wǒ wèi nǐ gǎndào jiāoào.', exampleTranslation: 'I am proud of you.', tags: ['adjective', 'emotion'] },
+  { id: 'hsk3-006', simplified: '教育', traditional: '教育', pinyin: 'jiàoyù', meaning: 'education', partOfSpeech: 'noun', hskLevel: 3, exampleSentence: '教育很重要。', examplePinyin: 'Jiàoyù hěn zhòngyào.', exampleTranslation: 'Education is very important.', tags: ['noun', 'education'] },
+  { id: 'hsk3-007', simplified: '严格', traditional: '嚴格', pinyin: 'yángé', meaning: 'strict / rigorous', partOfSpeech: 'adjective', hskLevel: 3, exampleSentence: '老师对我们很严格。', examplePinyin: 'Lǎoshī duì wǒmen hěn yángé.', exampleTranslation: 'The teacher is very strict with us.', tags: ['adjective', 'personality'] },
+  { id: 'hsk3-008', simplified: '研究', traditional: '研究', pinyin: 'yánjiū', meaning: 'to research / research', partOfSpeech: 'verb', hskLevel: 3, exampleSentence: '他在研究这个问题。', examplePinyin: 'Tā zài yánjiū zhège wèntí.', exampleTranslation: 'He is researching this problem.', tags: ['verb', 'academic'] },
+  { id: 'hsk3-009', simplified: '发展', traditional: '發展', pinyin: 'fāzhǎn', meaning: 'to develop / development', partOfSpeech: 'verb', hskLevel: 3, exampleSentence: '中国经济发展很快。', examplePinyin: 'Zhōngguó jīngjì fāzhǎn hěn kuài.', exampleTranslation: 'The economy of China is developing quickly.', tags: ['verb', 'economy'] },
+  { id: 'hsk3-010', simplified: '社会', traditional: '社會', pinyin: 'shèhuì', meaning: 'society', partOfSpeech: 'noun', hskLevel: 3, exampleSentence: '社会在变化。', examplePinyin: 'Shèhuì zài biànhuà.', exampleTranslation: 'Society is changing.', tags: ['noun', 'society'] },
+];
+
+export const allVocabulary: VocabularyWord[] = [...hsk1Vocabulary, ...hsk2Vocabulary, ...hsk3Vocabulary];

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { allVocabulary } from '../data/vocabulary';
 import { useAppState } from '../hooks/useStore';
+import { AudioButton } from '../components/AudioButton';
 import { Search, Filter, Star, Bookmark } from 'lucide-react';
 import { HSKLevel } from '../types';
 
@@ -121,12 +122,18 @@ export function Vocabulary() {
                 <p className="text-5xl chinese-char mb-2" style={{ color: 'var(--text-primary)' }}>
                   {state.characterSet === 'traditional' ? selected.traditional : selected.simplified}
                 </p>
-                <p className="text-lg text-primary-600">{selected.pinyin}</p>
+                <div className="flex items-center justify-center gap-2 mb-1">
+                  <p className="text-lg text-primary-600">{selected.pinyin}</p>
+                  <AudioButton text={selected.simplified} size="sm" />
+                </div>
                 <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{selected.meaning}</p>
               </div>
               <div className="border-t pt-3" style={{ borderColor: 'var(--border-color)' }}>
                 <p className="text-xs font-semibold mb-2" style={{ color: 'var(--text-secondary)' }}>EXAMPLE</p>
-                <p className="chinese-char text-lg" style={{ color: 'var(--text-primary)' }}>{selected.exampleSentence}</p>
+                <div className="flex items-start gap-2">
+                  <p className="chinese-char text-lg flex-1" style={{ color: 'var(--text-primary)' }}>{selected.exampleSentence}</p>
+                  <AudioButton text={selected.exampleSentence} size="sm" />
+                </div>
                 <p className="text-sm text-primary-600 mt-1">{selected.examplePinyin}</p>
                 <p className="text-sm italic mt-1" style={{ color: 'var(--text-secondary)' }}>{selected.exampleTranslation}</p>
               </div>

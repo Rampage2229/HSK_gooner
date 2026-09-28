@@ -1,6 +1,7 @@
 import { useAppState } from '../hooks/useStore';
 import { useNavigate } from 'react-router-dom';
-import { Flame, BookOpen, Headphones, Mic, PenTool, Target, TrendingUp, Clock, Award } from 'lucide-react';
+import { Flame, BookOpen, Headphones, Mic, PenTool, Target, TrendingUp, Clock, Award, ArrowRight } from 'lucide-react';
+import { curriculum } from '../data/curriculum';
 
 export function Dashboard() {
   const { state, dispatch } = useAppState();
@@ -21,6 +22,19 @@ export function Dashboard() {
 
   const currentWeek = Math.min(Math.floor(progress.completedLessons.length / 7) + 1, 24);
   const srsDue = progress.srsItems.filter(i => new Date(i.nextReview) <= new Date()).length;
+
+  // Find next unfinished lesson
+  const getNextLesson = () => {
+    for (const week of curriculum) {
+      for (const lesson of week.lessons) {
+        if (!progress.completedLessons.includes(lesson.id)) {
+          return { lesson, week };
+        }
+      }
+    }
+    return null;
+  };
+  const nextLesson = getNextLesson();
 
   const getDailyGoalMinutes = () => {
     switch (profile?.dailyTime) {
@@ -57,6 +71,23 @@ export function Dashboard() {
           </div>
         </div>
       </div>
+
+      {/* Continue Learning Banner */}
+      {nextLesson && (
+        <button
+          onClick={() => navigate(`/lesson/${nextLesson.lesson.id}`)}
+          className="w-full card bg-gradient-to-r from-primary-500 to-primary-600 text-white hover:shadow-lg transition-all hover:scale-[1.01] text-left"
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs font-medium opacity-80 uppercase tracking-wide">Continue Learning →</p>
+              <p className="text-lg font-bold mt-1">Week {nextLesson.week.number}: {nextLesson.lesson.title}</p>
+              <p className="text-sm opacity-80 chinese-char">{nextLesson.lesson.titleCn} • {nextLesson.lesson.duration} min</p>
+            </div>
+            <ArrowRight size={24} className="opacity-60" />
+          </div>
+        </button>
+      )}
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -124,14 +155,22 @@ export function Dashboard() {
         </div>
 
         {/* Continue Learning */}
-        <div className="card cursor-pointer hover:border-primary-300 transition" onClick={() => navigate('/curriculum')}>
+        <div 
+          className="card cursor-pointer hover:border-primary-300 transition group" 
+          onClick={() => nextLesson ? navigate(`/lesson/${nextLesson.lesson.id}`) : navigate('/curriculum')}
+        >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
               <Target size={20} className="text-green-600" />
             </div>
-            <div>
-              <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>Continue Learning</p>
-              <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Week {currentWeek} • Next lesson</p>
+            <div className="flex-1">
+              <p className="text-sm font-medium flex items-center gap-1" style={{ color: 'var(--text-primary)' }}>
+                Continue Learning
+                <ArrowRight size={14} className="text-green-600 group-hover:translate-x-1 transition-transform" />
+              </p>
+              <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                {nextLesson ? `Week ${nextLesson.week.number} — ${nextLesson.lesson.title}` : 'All lessons complete! 🎉'}
+              </p>
             </div>
           </div>
         </div>

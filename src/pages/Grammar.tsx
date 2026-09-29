@@ -1,10 +1,15 @@
 import { useState } from 'react';
 import { grammarPoints } from '../data/grammar';
-import { Search } from 'lucide-react';
+import { grammarExercises } from '../data/grammarExercises';
+import { GrammarExercise } from '../components/GrammarExercise';
+import { useAppState } from '../hooks/useStore';
+import { Search, CheckCircle } from 'lucide-react';
 
 export function Grammar() {
   const [search, setSearch] = useState('');
   const [selectedId, setSelectedId] = useState<string | null>(grammarPoints[0]?.id || null);
+  const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
+  const { state, dispatch } = useAppState();
 
   const filtered = grammarPoints.filter(gp =>
     gp.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -13,6 +18,36 @@ export function Grammar() {
   );
 
   const selected = grammarPoints.find(gp => gp.id === selectedId);
+  const exercises = selected ? grammarExercises.filter(ex => ex.grammarId === selected.id) : [];
+  const currentExercise = exercises[currentExerciseIndex];
+  
+  // Track completed exercises
+  const completedExercises = state.progress.completedExercises || [];
+  const isExerciseCompleted = (exerciseId: string) => completedExercises.includes(exerciseId);
+  
+  const handleExerciseComplete = (correct: boolean) => {
+    if (correct && currentExercise && !isExerciseCompleted(currentExercise.id)) {
+      dispatch({
+        type: 'UPDATE_PROGRESS',
+        payload: {
+          completedExercises: [...completedExercises, currentExercise.id],
+          grammarCompleted: (state.progress.grammarCompleted || 0) + 1,
+        }
+      });
+    }
+  };
+
+  const nextExercise = () => {
+    if (currentExerciseIndex < exercises.length - 1) {
+      setCurrentExerciseIndex(currentExerciseIndex + 1);
+    }
+  };
+
+  const prevExercise = () => {
+    if (currentExerciseIndex > 0) {
+      setCurrentExerciseIndex(currentExerciseIndex - 1);
+    }
+  };
 
   return (
     <div className="animate-fade-in space-y-4">
@@ -101,6 +136,65 @@ export function Grammar() {
                   {selected.commonMistakes.map((m, i) => (
                     <p key={i} className="text-sm text-yellow-700 dark:text-yellow-400 mb-1">• {m}</p>
                   ))}
+                </div>
+              )}
+
+              {/* Practice Exercises */}
+              {exercises.length > 0 && (
+                <div className="border-t pt-4" style={{ borderColor: 'var(--border-color)' }}>
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
+                      Practice Exercises
+                    </h3>
+                    <span className="text-xs px-2 py-1 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300">
+                      {exercises.filter(ex => isExerciseCompleted(ex.id)).length} / {exercises.length} completed
+                    </span>
+                  </div>
+
+                  {currentExercise && (
+                    <>
+                      <div className="mb-3">
+                        <div className="flex items-center justify-between text-xs mb-2" style={{ color: 'var(--text-secondary)' }}>
+                          <span>Exercise {currentExerciseIndex + 1} of {exercises.length}</span>
+                          <div className="flex items-center gap-1">
+                            {isExerciseCompleted(currentExercise.id) && (
+                              <CheckCircle size={14} className="text-green-500" />
+                            )}
+                            <span className="capitalize">{currentExercise.type.replace('-', ' ')}</span>
+                          </div>
+                        </div>
+                        <div className="progress-bar">
+                          <div 
+                            className="progress-bar-fill" 
+                            style={{ width: `${((currentExerciseIndex + 1) / exercises.length) * 100}%` }}
+                          />
+                        </div>
+                      </div>
+
+                      <GrammarExercise
+                        key={currentExercise.id}
+                        exercise={currentExercise}
+                        onComplete={handleExerciseComplete}
+                      />
+
+                      <div className="flex gap-2 mt-3">
+                        <button
+                          onClick={prevExercise}
+                          disabled={currentExerciseIndex === 0}
+                          className="btn-secondary flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          ← Previous
+                        </button>
+                        <button
+                          onClick={nextExercise}
+                          disabled={currentExerciseIndex === exercises.length - 1}
+                          className="btn-secondary flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          Next →
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </div>
               )}
 

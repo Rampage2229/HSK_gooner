@@ -58,6 +58,22 @@ export interface GrammarExample {
   english: string;
 }
 
+export interface GrammarExercise {
+  id: string;
+  grammarId: string;
+  type: 'fill-blank' | 'multiple-choice' | 'translation' | 'error-correction';
+  question: string;
+  questionPinyin?: string;
+  options?: string[];
+  answer: string;
+  answerPinyin?: string;
+  translation?: string;
+  explanation: string;
+  difficulty: 1 | 2 | 3;
+  correctSentence?: string;
+  correctPinyin?: string;
+}
+
 export interface Lesson {
   id: string;
   title: string;
